@@ -113,6 +113,13 @@
         <button id="noBtn">No</button>
       </div>
 
+      <div class="buttons">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+        
+      </div>
+          <button id="resetBtn" style="margin-top:15px; padding:8px 15px; border-radius:20px; background:#ff9a9e; color:white; border:none; cursor:pointer;">Reset</button>
+
       <div class="shy-text">"No" seems a bit shy 😈</div>
     </div>
 
@@ -212,9 +219,60 @@
             src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDVseGh4Z2hmMHdkN2N4eHY5OWhlZGZ3cnJyaTZnZDd2dTE5dzJqOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ujTVMASREzuRbH6zy5/giphy.gif" />
         `;
       });
+
+      const resetBtn = document.getElementById("resetBtn");
+
+resetBtn.addEventListener("click", () => {
+  // Reset card innerHTML to original content
+  card.innerHTML = `
+    <h1>Hey Sydney</h1>
+    <p>Will you be my Valentine?</p>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
+    </div>
+
+    <div class="shy-text">"No" seems a bit shy 😈</div>
+  `;
+
+  // Re-assign the Yes/No buttons after resetting HTML
+  yesBtn = document.getElementById("yesBtn");
+  noBtn = document.getElementById("noBtn");
+
+  // Reset Yes scale
+  yesScale = 1;
+  yesBtn.style.transform = `scale(${yesScale})`;
+
+  // Re-attach event listeners for Yes/No buttons
+  noBtn.addEventListener("pointerenter", (e) => {
+    if (e.pointerType === "mouse") moveNoButton();
+  });
+
+  noBtn.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "touch") {
+      e.preventDefault();
+      moveNoButton();
+    }
+  });
+
+  yesBtn.addEventListener("click", () => {
+    yesSound.currentTime = 0;
+    yesSound.play();
+
+    card.innerHTML = `
+      <h1>LET'S GOOOOOO 🎉</h1>
+      <p>You just made my day 🥰</p>
+      <img class="gif"
+        src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDVseGh4Z2hmMHdkN2N4eHY5OWhlZGZ3cnJyaTZnZDd2dTE5dzJqOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ujTVMASREzuRbH6zy5/giphy.gif" />
+    `;
+  });
+});
+      
     </script>
   </body>
 </html>
+
 
 
 
