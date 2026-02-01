@@ -123,6 +123,53 @@
       const yesSound = document.getElementById("yesSound");
       const yesBtn = document.getElementById("yesBtn");
 
+      // Add this AFTER your consts
+  let yesScale = 1; // starting size for Yes button
+
+  // ===========================
+  // 2️⃣ Function to move No button
+  // ===========================
+  function moveNoButton() {
+    noSound.currentTime = 0;
+    noSound.play();
+
+    const cardRect = card.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+
+    const padding = 20;
+
+    const maxX = cardRect.width - btnRect.width - padding;
+    const maxY = cardRect.height - btnRect.height - padding;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.position = "absolute";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
+
+  // ===========================
+  // 3️⃣ Add Yes button growth on No hover
+  // ===========================
+  noBtn.addEventListener("mouseenter", () => {
+    yesBtn.style.pointerEvents = "none"; // prevent accidental clicks
+    const interval = setInterval(() => {
+      if (yesScale < 2) { // maximum size
+        yesScale += 0.01; // growth speed
+        yesBtn.style.transform = `scale(${yesScale})`;
+      } else {
+        clearInterval(interval); // stop growth when max reached
+      }
+    }, 50);
+  });
+
+  noBtn.addEventListener("mouseleave", () => {
+    yesBtn.style.pointerEvents = "auto"; // re-enable clicks
+    yesScale = 1; // reset scale
+    yesBtn.style.transform = `scale(${yesScale})`;
+  });
+
       function moveNoButton() {
         noSound.currentTime = 0;
         noSound.play();
@@ -168,6 +215,7 @@
     </script>
   </body>
 </html>
+
 
 
 
