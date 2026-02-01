@@ -1,127 +1,165 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Be My Valentine 💖</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "Poppins", sans-serif;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Be My Valentine 💖</title>
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Poppins", sans-serif;
+      }
 
-    .card {
-      background: #fff;
-      padding: 40px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-      width: 330px;
-    }
+      .card {
+        background: #fff;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        width: 330px;
+      }
 
-    h1 {
-      color: #ff4d6d;
-      margin-bottom: 10px;
-    }
+      h1 {
+        color: #ff4d6d;
+        margin-bottom: 10px;
+      }
 
-    p {
-      color: #555;
-      margin-bottom: 25px;
-    }
+      p {
+        color: #555;
+        margin-bottom: 25px;
+      }
 
-    .buttons {
-      display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;   /* 👈 evenly spaced gap */
-    }
+      .buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px; /* 👈 evenly spaced gap */
+      }
 
-    button {
-      padding: 12px 22px;
-  font-size: 16px;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: 0.3s ease;
-    }
+      button {
+        padding: 12px 22px;
+        font-size: 16px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: 0.3s ease;
+      }
 
-    #yesBtn {
-      background: #ff4d6d;
-      color: white;
-      margin-right: 10px;
-    }
+      #yesBtn {
+        background: #ff4d6d;
+        color: white;
+        margin-right: 10px;
+      }
 
-    #yesBtn:hover {
-      background: #ff1f4a;
-      transform: scale(1.05);
-    }
+      #yesBtn:hover {
+        background: #ff1f4a;
+        transform: scale(1.05);
+      }
 
-    #noBtn {
-      /* position: absolute; */
+      #noBtn {
+        /* position: absolute; */
         position: relative; /* stays in layout */
 
-      background: #ccc;
-      color: #333;
-    }
+        background: #ccc;
+        color: #333;
+        user-select: none;
+      }
 
-    .shy-text {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #ff4d6d;
-    }
+      .shy-text {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #ff4d6d;
+      }
 
-    .gif {
-      width: 220px;
-      margin-top: 20px;
-      border-radius: 15px;
-    }
-  </style>
-</head>
-<body>
+      .gif {
+        width: 220px;
+        margin-top: 20px;
+        border-radius: 15px;
+      }
+    </style>
+  </head>
+  <audio id="noSound" preload="auto">
+    <source
+      src="https://www.myinstants.com/media/sounds/windows-error.mp3"
+      type="audio/mpeg"
+    />
+  </audio>
 
-  <div class="card" id="card">
-    <h1>Hey Cutie 💕</h1>
-    <p>Will you be my Valentine?</p>
+  <audio id="yesSound" preload="auto">
+    <source
+      src="https://www.myinstants.com/media/sounds/tadaa.mp3"
+      type="audio/mpeg"
+    />
+  </audio>
 
-    <div class="buttons">
-      <button id="yesBtn" onclick="yesClicked()">Yes</button>
-      <button id="noBtn">No 🙈</button>
+  <body>
+    <div class="card" id="card">
+      <h1>Hey Cutie 💕</h1>
+      <p>Will you be my Valentine?</p>
+
+      <div class="buttons">
+        <button id="yesBtn" onclick="yesClicked()">Yes</button>
+        <button id="noBtn">No 🙈</button>
+      </div>
+
+      <div class="shy-text">"No" seems a bit shy 😈</div>
     </div>
 
-    <div class="shy-text">"No" seems a bit shy 😈</div>
-  </div>
+    <script>
+      const noBtn = document.getElementById("noBtn");
+      const noSound = document.getElementById("noSound");
+      const yesSound = document.getElementById("yesSound");
+      const buttons = document.querySelector(".buttons");
 
-  <script>
-    const noBtn = document.getElementById("noBtn");
+      function moveNoButton() {
+        noSound.currentTime = 0;
+        noSound.play();
 
-    noBtn.addEventListener("mouseenter", () => {
-      const card = document.querySelector(".card");
-      const maxX = card.clientWidth - noBtn.clientWidth;
-      const maxY = card.clientHeight - noBtn.clientHeight;
+        noBtn.style.position = "absolute";
 
-      const randomX = Math.random() * maxX;
-      const randomY = Math.random() * maxY;
+        const maxX = buttons.clientWidth - noBtn.clientWidth;
+        const maxY = buttons.clientHeight - noBtn.clientHeight;
 
-      noBtn.style.left = randomX + "px";
-      noBtn.style.top = randomY + "px";
-    });
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
 
-    function yesClicked() {
-      document.getElementById("card").innerHTML = `
-        <h1>YAYYYY</h1>
-        <p>You just made my day</p>
-        <img 
-          class="gif"
-          src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
-          alt="Love GIF"
-        />
-      `;
-    }
-  </script>
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+      }
 
-</body>
+      // Desktop hover
+      noBtn.addEventListener("pointerenter", (e) => {
+        if (e.pointerType === "mouse") {
+          moveNoButton();
+        }
+      });
+
+      // Mobile tap
+      noBtn.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "touch") {
+          e.preventDefault(); // blocks click
+          moveNoButton();
+        }
+      });
+
+      function yesClicked() {
+        yesSound.currentTime = 0;
+        yesSound.play();
+
+        document.getElementById("card").innerHTML = `
+      <h1>YAYYYY 🎉</h1>
+      <p>You just made my day 🥰</p>
+      <img 
+        class="gif"
+        src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
+        alt="Love GIF"
+      />
+    `;
+      }
+    </script>
+  </body>
 </html>
