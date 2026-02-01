@@ -1,277 +1,181 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <title>Click Me :)</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valentine Surprise</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Poppins", sans-serif;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      padding: 30px 20px 50px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 360px;
+      position: relative;
+      overflow: hidden;
+    }
+    h1 { color: #ff4d6d; margin-bottom: 10px; font-size: 1.8rem; }
+    p { color: #555; margin-bottom: 25px; }
+    .buttons { display: flex; justify-content: center; gap: 20px; }
+    button {
+      padding: 12px 22px;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    #yesBtn { background: #ff4d6d; color: white; transition: transform 0.05s linear; }
+    #noBtn { background: #ccc; color: #333; position: relative; user-select: none; }
+    #resetBtn { margin-top:15px; padding:8px 15px; border-radius:20px; background:#ff9a9e; color:white; border:none; cursor:pointer; }
+    .shy-text { margin-top: 18px; font-size: 14px; color: #ff4d6d; }
+    .gif { width: 100%; max-width: 220px; margin-top: 20px; border-radius: 15px; }
+  </style>
+</head>
+<body>
+  <!-- Sounds -->
+  <audio id="noSound" preload="auto">
+    <source src="https://www.myinstants.com/media/sounds/windows-error.mp3" type="audio/mpeg"/>
+  </audio>
+  <audio id="yesSound" preload="auto">
+    <source src="https://www.myinstants.com/media/sounds/tadaa.mp3" type="audio/mpeg"/>
+  </audio>
 
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: "Poppins", sans-serif;
-        padding: 20px;
-      }
-
-      .card {
-        background: #fff;
-        padding: 30px 20px 50px;
-        border-radius: 20px;
-        text-align: center;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        width: 100%;
-        max-width: 360px;
-        position: relative; /* 👈 boundary */
-        overflow: hidden;
-      }
-
-      h1 {
-        color: #ff4d6d;
-        margin-bottom: 10px;
-        font-size: 1.8rem;
-      }
-
-      p {
-        color: #555;
-        margin-bottom: 25px;
-      }
-
-      .buttons {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-      }
-
-      button {
-        padding: 12px 22px;
-        font-size: 16px;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: 0.3s ease;
-      }
-
-      #yesBtn {
-        background: #ff4d6d;
-        color: white;
-      }
-
-      #noBtn {
-        background: #ccc;
-        color: #333;
-        position: relative;
-        user-select: none;
-      }
-
-      .shy-text {
-        margin-top: 18px;
-        font-size: 14px;
-        color: #ff4d6d;
-      }
-
-      .gif {
-        width: 100%;
-        max-width: 220px;
-        margin-top: 20px;
-        border-radius: 15px;
-      }
-    </style>
-  </head>
-
-  <body>
-    <audio id="noSound" preload="auto">
-       <source
-        src="https://www.myinstants.com/media/sounds/windows-error.mp3"
-        type="audio/mpeg"
-      />
-    </audio>
-
-    <audio id="yesSound" preload="auto">
-      <source
-        src="https://www.myinstants.com/media/sounds/tadaa.mp3"
-        type="audio/mpeg"
-      />
-    </audio>
-
-    <div class="card" id="card">
-  <h1>Hey Sydney</h1>
-  <p>Will you be my Valentine?</p>
-
-  <div class="buttons">
-    <button id="yesBtn">Yes</button>
-    <button id="noBtn">No</button>
+  <div class="card" id="card">
+    <h1>Hey Sydney</h1>
+    <p>Will you be my Valentine?</p>
+    <div class="buttons">
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
+    </div>
+    <button id="resetBtn">Reset</button>
+    <div class="shy-text">"No" seems a bit shy 😈</div>
   </div>
 
-  <!-- Reset button -->
-  <button id="resetBtn" style="margin-top:15px; padding:8px 15px; border-radius:20px; background:#ff9a9e; color:white; border:none; cursor:pointer;">Reset</button>
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const card = document.getElementById("card");
+    const noSound = document.getElementById("noSound");
+    const yesSound = document.getElementById("yesSound");
 
-  <div class="shy-text">"No" seems a bit shy 😈</div>
-</div>
+    let yesScale = 1;
+    let growthInterval = null;
 
-    <script>
-      const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const resetBtn = document.getElementById("resetBtn");
-const card = document.getElementById("card");
-const noSound = document.getElementById("noSound");
-const yesSound = document.getElementById("yesSound");
+    // Move No button
+    function moveNoButton() {
+      noSound.currentTime = 0;
+      noSound.play();
 
-let yesScale = 1;        // starting size for Yes
-let growthInterval = null; // for the Yes-growth interval
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+      const padding = 20;
 
-  // ===========================
-  // 2️⃣ Function to move No button
-  // ===========================
-  function moveNoButton() {
-  noSound.currentTime = 0;
-  noSound.play();
+      const maxX = cardRect.width - btnRect.width - padding;
+      const maxY = cardRect.height - btnRect.height - padding;
 
-  const cardRect = card.getBoundingClientRect();
-  const btnRect = noBtn.getBoundingClientRect();
-  const padding = 20;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
 
-  const maxX = cardRect.width - btnRect.width - padding;
-  const maxY = cardRect.height - btnRect.height - padding;
-
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
-
-  noBtn.style.position = "absolute";
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-}
-
-  // ===========================
-  // 3️⃣ Add Yes button growth on No hover
-  // ===========================
-  noBtn.addEventListener("mouseenter", () => {
-    yesBtn.style.pointerEvents = "none"; // prevent accidental clicks
-    const interval = setInterval(() => {
-      if (yesScale < 2) { // maximum size
-        yesScale += 0.01; // growth speed
-        yesBtn.style.transform = `scale(${yesScale})`;
-      } else {
-        clearInterval(interval); // stop growth when max reached
-      }
-    }, 50);
-  });
-
-  noBtn.addEventListener("mouseleave", () => {
-    yesBtn.style.pointerEvents = "auto"; // re-enable clicks
-    yesScale = 1; // reset scale
-    yesBtn.style.transform = `scale(${yesScale})`;
-  });
-
-      function moveNoButton() {
-        noSound.currentTime = 0;
-        noSound.play();
-
-        const cardRect = card.getBoundingClientRect();
-        const btnRect = noBtn.getBoundingClientRect();
-
-        const padding = 20;
-
-        const maxX = cardRect.width - btnRect.width - padding;
-        const maxY = cardRect.height - btnRect.height - padding;
-
-        const x = Math.random() * maxX;
-        const y = Math.random() * maxY;
-
-        noBtn.style.position = "absolute";
-        noBtn.style.left = x + "px";
-        noBtn.style.top = y + "px";
-      }
-
-      noBtn.addEventListener("mouseenter", () => {
-  yesBtn.style.pointerEvents = "none";
-
-  if (growthInterval) clearInterval(growthInterval);
-
-  growthInterval = setInterval(() => {
-    if (yesScale < 2) {
-      yesScale += 0.01;
-      yesBtn.style.transform = `scale(${yesScale})`;
-    } else {
-      clearInterval(growthInterval);
-      growthInterval = null;
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
     }
-  }, 50);
 
-  moveNoButton();
-});
+    // Yes growth on hover over No
+    noBtn.addEventListener("mouseenter", () => {
+      yesBtn.style.pointerEvents = "none";
 
-noBtn.addEventListener("mouseleave", () => {
-  yesBtn.style.pointerEvents = "auto";
-  yesScale = 1;
-  yesBtn.style.transform = `scale(${yesScale})`;
+      if (growthInterval) clearInterval(growthInterval);
 
-  if (growthInterval) {
-    clearInterval(growthInterval);
-    growthInterval = null;
-  }
-});
+      growthInterval = setInterval(() => {
+        if (yesScale < 2) {
+          yesScale += 0.01;
+          yesBtn.style.transform = `scale(${yesScale})`;
+        } else {
+          clearInterval(growthInterval);
+          growthInterval = null;
+        }
+      }, 50);
 
-noBtn.addEventListener("pointerenter", (e) => {
-  if (e.pointerType === "mouse") moveNoButton();
-});
+      moveNoButton();
+    });
 
-noBtn.addEventListener("pointerdown", (e) => {
-  if (e.pointerType === "touch") {
-    e.preventDefault();
-    moveNoButton();
-  }
-});
+    noBtn.addEventListener("mouseleave", () => {
+      yesBtn.style.pointerEvents = "auto";
+      yesScale = 1;
+      yesBtn.style.transform = `scale(${yesScale})`;
 
-     yesBtn.addEventListener("click", () => {
-  yesSound.currentTime = 0;
-  yesSound.play();
+      if (growthInterval) {
+        clearInterval(growthInterval);
+        growthInterval = null;
+      }
+    });
 
-  card.innerHTML = `
-    <h1>LET'S GOOOOOO 🎉</h1>
-    <p>You just made my day 🥰</p>
-    <img class="gif"
-      src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDVseGh4Z2hmMHdkN2N4eHY5OWhlZGZ3cnJyaTZnZDd2dTE5dzJqOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ujTVMASREzuRbH6zy5/giphy.gif" />
-  `;
-});
+    noBtn.addEventListener("pointerenter", (e) => {
+      if (e.pointerType === "mouse") moveNoButton();
+    });
 
-      resetBtn.addEventListener("click", () => {
-  // Reset text
-  card.querySelector("p").textContent = "Will you be my Valentine?";
+    noBtn.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "touch") {
+        e.preventDefault();
+        moveNoButton();
+      }
+    });
 
-  // Remove GIF if it exists
-  const gif = card.querySelector(".gif");
-  if (gif) gif.remove();
+    // Yes button click
+    yesBtn.addEventListener("click", () => {
+      yesSound.currentTime = 0;
+      yesSound.play();
 
-  // Reset Yes button scale
-  yesScale = 1;
-  yesBtn.style.transform = `scale(${yesScale})`;
-  yesBtn.style.pointerEvents = "auto";
+      card.querySelector("p").textContent = "You just made my day 🥰";
 
-  // Reset No button position
-  noBtn.style.left = "initial";
-  noBtn.style.top = "initial";
+      // Add GIF if not already there
+      if (!card.querySelector(".gif")) {
+        const img = document.createElement("img");
+        img.src = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDVseGh4Z2hmMHdkN2N4eHY5OWhlZGZ3cnJyaTZnZDd2dTE5dzJqOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ujTVMASREzuRbH6zy5/giphy.gif";
+        img.className = "gif";
+        card.appendChild(img);
+      }
+    });
 
-  // Reset shy text
-  card.querySelector(".shy-text").textContent = `"No" seems a bit shy 😈`;
-});
-      
-    </script>
-  </body>
+    // Reset button
+    resetBtn.addEventListener("click", () => {
+      card.querySelector("p").textContent = "Will you be my Valentine?";
+
+      // Remove GIF if exists
+      const gif = card.querySelector(".gif");
+      if (gif) gif.remove();
+
+      // Reset Yes button scale
+      yesScale = 1;
+      yesBtn.style.transform = `scale(${yesScale})`;
+      yesBtn.style.pointerEvents = "auto";
+
+      // Reset No button position
+      noBtn.style.left = "initial";
+      noBtn.style.top = "initial";
+
+      // Reset shy text
+      card.querySelector(".shy-text").textContent = `"No" seems a bit shy 😈`;
+    });
+  </script>
+</body>
 </html>
-
-
-
 
 
 
