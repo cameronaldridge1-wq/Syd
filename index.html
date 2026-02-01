@@ -105,56 +105,52 @@
     </audio>
 
     <div class="card" id="card">
-      <h1>Hey Sydney</h1>
-      <p>Will you be my Valentine?</p>
+  <h1>Hey Sydney</h1>
+  <p>Will you be my Valentine?</p>
 
-      <div class="buttons">
-        <button id="yesBtn">Yes</button>
-        <button id="noBtn">No</button>
-      </div>
+  <div class="buttons">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
 
-      <div class="buttons">
-        <button id="yesBtn">Yes</button>
-        <button id="noBtn">No</button>
-        
-      </div>
-          <button id="resetBtn" style="margin-top:15px; padding:8px 15px; border-radius:20px; background:#ff9a9e; color:white; border:none; cursor:pointer;">Reset</button>
+  <!-- Reset button -->
+  <button id="resetBtn" style="margin-top:15px; padding:8px 15px; border-radius:20px; background:#ff9a9e; color:white; border:none; cursor:pointer;">Reset</button>
 
-      <div class="shy-text">"No" seems a bit shy 😈</div>
-    </div>
+  <div class="shy-text">"No" seems a bit shy 😈</div>
+</div>
 
     <script>
       const noBtn = document.getElementById("noBtn");
-      const card = document.getElementById("card");
-      const noSound = document.getElementById("noSound");
-      const yesSound = document.getElementById("yesSound");
-      const yesBtn = document.getElementById("yesBtn");
+const yesBtn = document.getElementById("yesBtn");
+const resetBtn = document.getElementById("resetBtn");
+const card = document.getElementById("card");
+const noSound = document.getElementById("noSound");
+const yesSound = document.getElementById("yesSound");
 
-      // Add this AFTER your consts
-  let yesScale = 1; // starting size for Yes button
+let yesScale = 1;        // starting size for Yes
+let growthInterval = null; // for the Yes-growth interval
 
   // ===========================
   // 2️⃣ Function to move No button
   // ===========================
   function moveNoButton() {
-    noSound.currentTime = 0;
-    noSound.play();
+  noSound.currentTime = 0;
+  noSound.play();
 
-    const cardRect = card.getBoundingClientRect();
-    const btnRect = noBtn.getBoundingClientRect();
+  const cardRect = card.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+  const padding = 20;
 
-    const padding = 20;
+  const maxX = cardRect.width - btnRect.width - padding;
+  const maxY = cardRect.height - btnRect.height - padding;
 
-    const maxX = cardRect.width - btnRect.width - padding;
-    const maxY = cardRect.height - btnRect.height - padding;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
-    noBtn.style.position = "absolute";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  }
+  noBtn.style.position = "absolute";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
 
   // ===========================
   // 3️⃣ Add Yes button growth on No hover
@@ -197,81 +193,83 @@
         noBtn.style.top = y + "px";
       }
 
-      noBtn.addEventListener("pointerenter", (e) => {
-        if (e.pointerType === "mouse") moveNoButton();
-      });
+      noBtn.addEventListener("mouseenter", () => {
+  yesBtn.style.pointerEvents = "none";
 
-      noBtn.addEventListener("pointerdown", (e) => {
-        if (e.pointerType === "touch") {
-          e.preventDefault();
-          moveNoButton();
-        }
-      });
+  if (growthInterval) clearInterval(growthInterval);
 
-      yesBtn.addEventListener("click", () => {
-        yesSound.currentTime = 0;
-        yesSound.play();
+  growthInterval = setInterval(() => {
+    if (yesScale < 2) {
+      yesScale += 0.01;
+      yesBtn.style.transform = `scale(${yesScale})`;
+    } else {
+      clearInterval(growthInterval);
+      growthInterval = null;
+    }
+  }, 50);
 
-        card.innerHTML = `
-          <h1>LET'S GOOOOOO 🎉</h1>
-          <p>You just made my day 🥰</p>
-          <img class="gif"
-            src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDVseGh4Z2hmMHdkN2N4eHY5OWhlZGZ3cnJyaTZnZDd2dTE5dzJqOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ujTVMASREzuRbH6zy5/giphy.gif" />
-        `;
-      });
+  moveNoButton();
+});
 
-      const resetBtn = document.getElementById("resetBtn");
-
-resetBtn.addEventListener("click", () => {
-  // Reset card innerHTML to original content
-  card.innerHTML = `
-    <h1>Hey Sydney</h1>
-    <p>Will you be my Valentine?</p>
-
-    <div class="buttons">
-      <button id="yesBtn">Yes</button>
-      <button id="noBtn">No</button>
-    </div>
-
-    <div class="shy-text">"No" seems a bit shy 😈</div>
-  `;
-
-  // Re-assign the Yes/No buttons after resetting HTML
-  yesBtn = document.getElementById("yesBtn");
-  noBtn = document.getElementById("noBtn");
-
-  // Reset Yes scale
+noBtn.addEventListener("mouseleave", () => {
+  yesBtn.style.pointerEvents = "auto";
   yesScale = 1;
   yesBtn.style.transform = `scale(${yesScale})`;
 
-  // Re-attach event listeners for Yes/No buttons
-  noBtn.addEventListener("pointerenter", (e) => {
-    if (e.pointerType === "mouse") moveNoButton();
-  });
+  if (growthInterval) {
+    clearInterval(growthInterval);
+    growthInterval = null;
+  }
+});
 
-  noBtn.addEventListener("pointerdown", (e) => {
-    if (e.pointerType === "touch") {
-      e.preventDefault();
-      moveNoButton();
-    }
-  });
+noBtn.addEventListener("pointerenter", (e) => {
+  if (e.pointerType === "mouse") moveNoButton();
+});
 
-  yesBtn.addEventListener("click", () => {
-    yesSound.currentTime = 0;
-    yesSound.play();
+noBtn.addEventListener("pointerdown", (e) => {
+  if (e.pointerType === "touch") {
+    e.preventDefault();
+    moveNoButton();
+  }
+});
 
-    card.innerHTML = `
-      <h1>LET'S GOOOOOO 🎉</h1>
-      <p>You just made my day 🥰</p>
-      <img class="gif"
-        src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDlhaHhnNXVrZ3F0YWc1eGU1cWZkbzQ5NXg4cHY1YTh1ZWZyOGt6aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ORjfgiG9ZtxcQQwZzv/giphy.gif" />
-    `;
-  });
+     yesBtn.addEventListener("click", () => {
+  yesSound.currentTime = 0;
+  yesSound.play();
+
+  card.innerHTML = `
+    <h1>LET'S GOOOOOO 🎉</h1>
+    <p>You just made my day 🥰</p>
+    <img class="gif"
+      src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDVseGh4Z2hmMHdkN2N4eHY5OWhlZGZ3cnJyaTZnZDd2dTE5dzJqOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ujTVMASREzuRbH6zy5/giphy.gif" />
+  `;
+});
+
+      resetBtn.addEventListener("click", () => {
+  // Reset text
+  card.querySelector("p").textContent = "Will you be my Valentine?";
+
+  // Remove GIF if it exists
+  const gif = card.querySelector(".gif");
+  if (gif) gif.remove();
+
+  // Reset Yes button scale
+  yesScale = 1;
+  yesBtn.style.transform = `scale(${yesScale})`;
+  yesBtn.style.pointerEvents = "auto";
+
+  // Reset No button position
+  noBtn.style.left = "initial";
+  noBtn.style.top = "initial";
+
+  // Reset shy text
+  card.querySelector(".shy-text").textContent = `"No" seems a bit shy 😈`;
 });
       
     </script>
   </body>
 </html>
+
 
 
 
